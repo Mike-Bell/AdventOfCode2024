@@ -14,14 +14,8 @@ pub fn main() !void {
 
     while (splits.next()) |line| {
         var it = std.mem.split(u8, line, "   ");
-        const firstS = it.first();
-        const secondSMaybe = it.next();
-        if (secondSMaybe == null) {
-            continue;
-        }
-        const secondS = secondSMaybe.?;
-        const first = try std.fmt.parseInt(i32, firstS, 10);
-        const second = try std.fmt.parseInt(i32, secondS, 10);
+        const first = try std.fmt.parseInt(i32, it.first(), 10);
+        const second = try std.fmt.parseInt(i32, it.next().?, 10);
         try left.append(first);
         try right.append(second);
     }
@@ -41,20 +35,13 @@ pub fn main() !void {
 
     for (right.items) |elem| {
         const existing = counts.get(elem);
-        if (existing == null) {
-            try counts.put(elem, 1);
-        } else {
-            try counts.put(elem, existing.? + 1);
-        }
+        try counts.put(elem, if (existing == null) 1 else existing.? + 1);
     }
 
     var ans2: i32 = 0;
     for (left.items) |elem| {
         const mult = counts.get(elem);
-        if (mult == null) {
-            continue;
-        }
-        ans2 = ans2 + elem * mult.?;
+        ans2 = ans2 + elem * (if (mult == null) 0 else mult.?);
     }
 
     std.debug.print("{d}\n", .{ans2});
