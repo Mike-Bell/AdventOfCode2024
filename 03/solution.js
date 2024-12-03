@@ -8,13 +8,18 @@ const runPart1 = input => {
 };
 
 const runPart2 = input => {
-   const dos = [...input.matchAll(/do\(\)/g)].map(r => r.index).reverse();
-   const donts = [...input.matchAll(/don't\(\)/g)].map(r => r.index).reverse();
-   const result = [...input.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)];
+   const result = [...input.matchAll(/do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\)/g)];
+   let doMult = true;
    return result.reduce((acc, curr) => {
-      const lastDo = dos.find(i => i < curr.index);
-      const lastDont = donts.find(i => i < curr.index);
-      if (lastDont != null && (lastDo == null || lastDont > lastDo)) {
+      if (curr[0] === 'do()') {
+         doMult = true;
+         return acc;
+      } else if (curr[0] === 'don\'t()') {
+         doMult = false;
+         return acc;
+      }
+
+      if (!doMult) {
          return acc;
       }
       return acc + Number(curr[1]) * Number(curr[2]);
