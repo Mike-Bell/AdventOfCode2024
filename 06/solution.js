@@ -1,13 +1,17 @@
 const parseInput = input => input.split('\r\n').map(row => row.split(''));
 
+const dirs = [
+   [-1, 0],
+   [0, 1],
+   [1, 0],
+   [0, -1]
+];
+
 const runPart1 = input => {
    input = input.map(row => row.map(v => v));
 
-   let dir = [-1, 0];
+   let dir = 0;
    let steps = 1;
-   const turn = () => {
-      dir = [dir[1], -1 * dir[0]];
-   };
 
    let r = 0;
    let c = 0;
@@ -35,20 +39,22 @@ const runPart1 = input => {
 
    // eslint-disable-next-line no-constant-condition
    while (true) {
-      const nextR = r + dir[0];
-      const nextC = c + dir[1];
+      const nextR = r + dirs[dir][0];
+      const nextC = c + dirs[dir][1];
       switch (val(nextR, nextC)) {
          case '': {
             return steps;
          } case '#': {
-            turn();
+            dir = (dir + 1) % 4;
+            break;
+         } case 'X': {
+            r = nextR;
+            c = nextC;
             break;
          } default: {
             r = nextR;
             c = nextC;
-            if (input[r][c] !== 'X') {
-               steps++;
-            }
+            steps++;
 
             input[r][c] = 'X';
          }
@@ -59,10 +65,7 @@ const runPart1 = input => {
 const runPart2 = input => {
    input = input.map(row => row.map(v => v));
 
-   let dir = [-1, 0];
-   const turn = () => {
-      dir = [dir[1], -1 * dir[0]];
-   };
+   let dir = 0;
 
    let r = 0;
    let c = 0;
@@ -91,63 +94,68 @@ const runPart2 = input => {
    const initialR = r;
    const initialC = c;
 
+   const initials = [];
    // eslint-disable-next-line no-constant-condition, no-labels
    outer: while (true) {
-      const nextR = r + dir[0];
-      const nextC = c + dir[1];
-      switch (val(nextR, nextC)) {
+      const nextR = r + dirs[dir][0];
+      const nextC = c + dirs[dir][1];
+      const v = val(nextR, nextC);
+      switch (v) {
          case '': {
             // eslint-disable-next-line no-labels
             break outer;
          } case '#': {
-            turn();
+            dir = (dir + 1) % 4;
+            break;
+         } case 'X': {
+            r = nextR;
+            c = nextC;
             break;
          } default: {
             r = nextR;
             c = nextC;
             input[r][c] = 'X';
+            if (r !== initialR || c !== initialC) {
+               initials.push([r, c]);
+            }
          }
       }
    }
 
    let hits = 0;
-   for (let rt = 0; rt < input.length; rt++) {
-      for (let ct = 0; ct < input[rt].length; ct++) {
-         if (input[rt][ct] === 'X' && (rt !== initialR || ct !== initialC)) {
-            dir = [-1, 0];
-            r = initialR;
-            c = initialC;
-            const visited = [];
+   for (const [rt, ct] of initials) {
+      dir = 0;
+      r = initialR;
+      c = initialC;
+      const visited = new Set();
 
-            input[rt][ct] = '#';
-            // eslint-disable-next-line no-constant-condition, no-labels
-            outer2: while (true) {
-               const nextR = r + dir[0];
-               const nextC = c + dir[1];
-               switch (val(nextR, nextC)) {
-                  case '': {
-                     // eslint-disable-next-line no-labels
-                     break outer2;
-                  } case '#': {
-                     turn();
-                     break;
-                  } default: {
-                     r = nextR;
-                     c = nextC;
-                     const key = `${r}-${c}- ${dir[0]}-${dir[1]}`;
-                     if (visited.includes(key)) {
-                        hits++;
-                        // eslint-disable-next-line no-labels
-                        break outer2;
-                     }
-                     visited.push(key);
-                  }
+      input[rt][ct] = '#';
+      // eslint-disable-next-line no-constant-condition, no-labels
+      outer2: while (true) {
+         const nextR = r + dirs[dir][0];
+         const nextC = c + dirs[dir][1];
+         switch (val(nextR, nextC)) {
+            case '': {
+               // eslint-disable-next-line no-labels
+               break outer2;
+            } case '#': {
+               const key = r * 10000 + c * 10 + dir;
+               if (visited.has(key)) {
+                  hits++;
+                  // eslint-disable-next-line no-labels
+                  break outer2;
                }
+               visited.add(key);
+               dir = (dir + 1) % 4;
+               break;
+            } default: {
+               r = nextR;
+               c = nextC;
             }
-
-            input[rt][ct] = '.';
          }
       }
+
+      input[rt][ct] = '.';
    }
 
    return hits;
