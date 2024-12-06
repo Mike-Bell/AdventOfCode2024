@@ -95,17 +95,26 @@ const runPart2 = input => {
    const initialC = c;
 
    const initials = [];
+   const teleports = new Map();
+   let lastKey = '';
    // eslint-disable-next-line no-constant-condition, no-labels
    outer: while (true) {
       const nextR = r + dirs[dir][0];
       const nextC = c + dirs[dir][1];
       const v = val(nextR, nextC);
+
       switch (v) {
          case '': {
             // eslint-disable-next-line no-labels
             break outer;
          } case '#': {
+            const key = r * 10000 + c * 10 + dir;
             dir = (dir + 1) % 4;
+            if (lastKey) {
+               teleports.set(lastKey, [r, c, dir]);
+            }
+
+            lastKey = key;
             break;
          } case 'X': {
             r = nextR;
@@ -121,6 +130,8 @@ const runPart2 = input => {
          }
       }
    }
+
+   // console.debug(teleports);
 
    let hits = 0;
    for (const [rt, ct] of initials) {
@@ -146,7 +157,18 @@ const runPart2 = input => {
                   break outer2;
                }
                visited.add(key);
-               dir = (dir + 1) % 4;
+               if (r !== rt && c !== ct) {
+                  const t = teleports.get(key);
+                  if (t) {
+                     r = t[0];
+                     c = t[1];
+                     dir = t[2];
+                  } else {
+                     dir = (dir + 1) % 4;
+                  }
+               } else {
+                  dir = (dir + 1) % 4;
+               }
                break;
             } default: {
                r = nextR;
