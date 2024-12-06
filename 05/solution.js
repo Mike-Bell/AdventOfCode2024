@@ -8,13 +8,16 @@ const parseInput = input => {
 
 const runPart1 = input => {
    let sum = 0;
-   for (const pages of input.pageSets) {
-      const indexMap = {};
-      for (let i = 0; i < pages.length; i++) {
-         indexMap[pages[i]] = i;
-      }
+   const relationships = [];
+   for (const [a, b] of input.rules) {
+      relationships[a] = relationships[a] || [];
+      relationships[a][b] = -1;
+      relationships[b] = relationships[b] || [];
+      relationships[b][a] = 1;
+   }
 
-      if (input.rules.some(r => indexMap[r[0]] > indexMap[r[1]])) {
+   for (const pages of input.pageSets) {
+      if (pages.some((a, i) => relationships[a][pages[i + 1]] === 1)) {
          continue;
       }
 
@@ -26,25 +29,19 @@ const runPart1 = input => {
 
 const runPart2 = input => {
    let sum = 0;
+
+   const relationships = [];
+   for (const [a, b] of input.rules) {
+      relationships[a] = relationships[a] || [];
+      relationships[a][b] = -1;
+      relationships[b] = relationships[b] || [];
+      relationships[b][a] = 1;
+   }
+
    for (const pages of input.pageSets) {
-      const indexMap = {};
-      for (let i = 0; i < pages.length; i++) {
-         indexMap[pages[i]] = i;
-      }
+      if (pages.some((a, i) => relationships[a][pages[i + 1]] === 1)) {
+         pages.sort((a, b) => relationships[a][b]);
 
-      if (input.rules.some(r => indexMap[r[0]] > indexMap[r[1]])) {
-         pages.sort((a, b) => {
-            for (const rule of input.rules) {
-               if (rule[0] === a && rule[1] === b) {
-                  return -1;
-               }
-
-               if (rule[0] === b && rule[1] === a) {
-                  return 1;
-               }
-            }
-            return 0;
-         });
          sum += pages[Math.floor(pages.length / 2)];
       }
    }
