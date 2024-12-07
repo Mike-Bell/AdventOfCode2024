@@ -36,9 +36,7 @@ const runPart2 = input => {
       }
       return tryOperators(target, curr + nums[i], nums, i + 1)
          || tryOperators(target, curr * nums[i], nums, i + 1)
-         || tryOperators(target, Number(`${curr}${nums[i]}`), nums, i + 1);
-      // I feel like this should work but it does, not sure why
-      // || tryOperators(target, curr * Math.pow(10, Math.ceil(Math.log10(nums[i]))) + nums[i], nums, i + 1);
+         || tryOperators(target, curr * Math.pow(10, Math.ceil(Math.log10(nums[i] + 1))) + nums[i], nums, i + 1);
    };
 
    let sum = 0;
