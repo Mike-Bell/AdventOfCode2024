@@ -125,19 +125,17 @@ const runPart2 = input => {
             c = nextC;
             input[r][c] = 'X';
             if (r !== initialR || c !== initialC) {
-               initials.push([r, c]);
+               initials.push([r, c, dir]);
             }
          }
       }
    }
 
-   // console.debug(teleports);
-
    let hits = 0;
-   for (const [rt, ct] of initials) {
-      dir = 0;
-      r = initialR;
-      c = initialC;
+   for (const [rt, ct, d] of initials) {
+      dir = d;
+      r = rt - dirs[dir][0];
+      c = ct - dirs[dir][1];
       const visited = new Set();
 
       input[rt][ct] = '#';
