@@ -6,17 +6,19 @@ const parseInput = input => input.split('\r\n').map(
 );
 
 const runPart1 = input => {
-   const tryOperators = (target, curr, nums) => {
-      if (nums.length === 0) {
+   const tryOperators = (target, curr, nums, i) => {
+      if (curr > target) {
+         return false;
+      }
+      if (nums.length === i) {
          return target === curr;
       }
-      const nextNums = nums.slice(1);
-      return tryOperators(target, curr + nums[0], nextNums) || tryOperators(target, curr * nums[0], nextNums);
+      return tryOperators(target, curr + nums[i], nums, i + 1) || tryOperators(target, curr * nums[i], nums, i + 1);
    };
 
    let sum = 0;
    for (const [target, nums] of input) {
-      if (tryOperators(target, nums[0], nums.slice(1))) {
+      if (tryOperators(target, nums[0], nums, 1)) {
          sum += target;
       }
    }
@@ -25,19 +27,23 @@ const runPart1 = input => {
 };
 
 const runPart2 = input => {
-   const tryOperators = (target, curr, nums) => {
-      if (nums.length === 0) {
+   const tryOperators = (target, curr, nums, i) => {
+      if (curr > target) {
+         return false;
+      }
+      if (nums.length === i) {
          return target === curr;
       }
-      const nextNums = nums.slice(1);
-      return tryOperators(target, curr + nums[0], nextNums)
-         || tryOperators(target, curr * nums[0], nextNums)
-         || tryOperators(target, Number(`${curr}${nums[0]}`), nextNums);
+      return tryOperators(target, curr + nums[i], nums, i + 1)
+         || tryOperators(target, curr * nums[i], nums, i + 1)
+         || tryOperators(target, Number(`${curr}${nums[i]}`), nums, i + 1);
+      // I feel like this should work but it does, not sure why
+      // || tryOperators(target, curr * Math.pow(10, Math.ceil(Math.log10(nums[i]))) + nums[i], nums, i + 1);
    };
 
    let sum = 0;
    for (const [target, nums] of input) {
-      if (tryOperators(target, nums[0], nums.slice(1))) {
+      if (tryOperators(target, nums[0], nums, 1)) {
          sum += target;
       }
    }
