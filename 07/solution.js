@@ -27,7 +27,7 @@ const runPart1 = input => {
 };
 
 const runPart2 = input => {
-   const tryOperators = (target, curr, nums, i) => {
+   const tryOperators = (target, curr, nums, i, digitFactors) => {
       if (curr > target) {
          return false;
       }
@@ -36,14 +36,15 @@ const runPart2 = input => {
       }
 
       const n = nums[i];
-      return tryOperators(target, curr + n, nums, i + 1)
-         || tryOperators(target, curr * n, nums, i + 1)
-         || tryOperators(target, curr * Math.pow(10, `${n}`.length) + n, nums, i + 1);
+      return tryOperators(target, curr + n, nums, i + 1, digitFactors)
+         || tryOperators(target, curr * n, nums, i + 1, digitFactors)
+         || tryOperators(target, curr * digitFactors[i] + n, nums, i + 1, digitFactors);
    };
 
    let sum = 0;
    for (const [target, nums] of input) {
-      if (tryOperators(target, nums[0], nums, 1)) {
+      const digitFactors = nums.map(n => Math.pow(10, `${n}`.length));
+      if (tryOperators(target, nums[0], nums, 1, digitFactors)) {
          sum += target;
       }
    }
