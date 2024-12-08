@@ -1,47 +1,42 @@
 const parseInput = input => input.split('\r\n').map(row => row.split(''));
 
 const runPart1 = input => {
-   const val = (r, c) => {
-      const row = input[r];
-      if (!row) {
-         return '';
-      }
-      return row[c] || '';
-   };
+   const maxR = input.length;
+   const maxC = input[0].length;
 
    let hits = 0;
-   for (let r = 0; r < input.length; r++) {
-      for (let c = 0; c < input[r].length; c++) {
-         if (val(r, c) === 'X') {
-            if (val(r + 1, c) === 'M' && val(r + 2, c) === 'A' && val(r + 3, c) === 'S') {
+   for (let r = 0; r < maxR; r++) {
+      for (let c = 0; c < maxC; c++) {
+         if (input[r][c] === 'X') {
+            if (r + 3 < maxR && input[r + 1][c] === 'M' && input[r + 2][c] === 'A' && input[r + 3][c] === 'S') {
                hits++;
             }
 
-            if (val(r - 1, c) === 'M' && val(r - 2, c) === 'A' && val(r - 3, c) === 'S') {
+            if (r - 3 >= 0 && input[r - 1][c] === 'M' && input[r - 2][c] === 'A' && input[r - 3][c] === 'S') {
                hits++;
             }
 
-            if (val(r, c + 1) === 'M' && val(r, c + 2) === 'A' && val(r, c + 3) === 'S') {
+            if (c + 3 < maxC && input[r][c + 1] === 'M' && input[r][c + 2] === 'A' && input[r][c + 3] === 'S') {
                hits++;
             }
 
-            if (val(r, c - 1) === 'M' && val(r, c - 2) === 'A' && val(r, c - 3) === 'S') {
+            if (c - 3 >= 0 && input[r][c - 1] === 'M' && input[r][c - 2] === 'A' && input[r][c - 3] === 'S') {
                hits++;
             }
 
-            if (val(r + 1, c + 1) === 'M' && val(r + 2, c + 2) === 'A' && val(r + 3, c + 3) === 'S') {
+            if (c + 3 < maxC && r + 3 < maxR && input[r + 1][c + 1] === 'M' && input[r + 2][c + 2] === 'A' && input[r + 3][c + 3] === 'S') {
                hits++;
             }
 
-            if (val(r + 1, c - 1) === 'M' && val(r + 2, c - 2) === 'A' && val(r + 3, c - 3) === 'S') {
+            if (r + 3 < maxR && c - 3 >= 0 && input[r + 1][c - 1] === 'M' && input[r + 2][c - 2] === 'A' && input[r + 3][c - 3] === 'S') {
                hits++;
             }
 
-            if (val(r - 1, c + 1) === 'M' && val(r - 2, c + 2) === 'A' && val(r - 3, c + 3) === 'S') {
+            if (r - 3 >= 0 && c + 3 < maxC && input[r - 1][c + 1] === 'M' && input[r - 2][c + 2] === 'A' && input[r - 3][c + 3] === 'S') {
                hits++;
             }
 
-            if (val(r - 1, c - 1) === 'M' && val(r - 2, c - 2) === 'A' && val(r - 3, c - 3) === 'S') {
+            if (r - 3 >= 0 && c - 3 >= 0 && input[r - 1][c - 1] === 'M' && input[r - 2][c - 2] === 'A' && input[r - 3][c - 3] === 'S') {
                hits++;
             }
          }
@@ -52,22 +47,17 @@ const runPart1 = input => {
 };
 
 const runPart2 = input => {
-   const val = (r, c) => {
-      const row = input[r];
-      if (!row) {
-         return '';
-      }
-      return row[c] || '';
-   };
+   const maxR = input.length;
+   const maxC = input[0].length;
 
    let hits = 0;
-   for (let r = 0; r < input.length; r++) {
-      for (let c = 0; c < input[r].length; c++) {
-         if (val(r, c) === 'A') {
-            const br = val(r + 1, c + 1);
-            const tl = val(r - 1, c - 1);
-            const bl = val(r + 1, c - 1);
-            const tr = val(r - 1, c + 1);
+   for (let r = 0; r < maxR; r++) {
+      for (let c = 0; c < maxC; c++) {
+         if (r > 0 && c > 0 && r < maxR - 1 && c < maxC - 1 && input[r][c] === 'A') {
+            const br = input[r + 1][c + 1];
+            const tl = input[r - 1][c - 1];
+            const bl = input[r + 1][c - 1];
+            const tr = input[r - 1][c + 1];
             if ((br === 'M' && tl === 'S') || (br === 'S' && tl === 'M')) {
                if ((bl === 'M' && tr === 'S') || (bl === 'S' && tr === 'M')) {
                   hits++;
