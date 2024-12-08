@@ -34,9 +34,11 @@ const runPart2 = input => {
       if (nums.length === i) {
          return target === curr;
       }
-      return tryOperators(target, curr + nums[i], nums, i + 1)
-         || tryOperators(target, curr * nums[i], nums, i + 1)
-         || tryOperators(target, curr * Math.pow(10, Math.ceil(Math.log10(nums[i] + 1))) + nums[i], nums, i + 1);
+
+      const n = nums[i];
+      return tryOperators(target, curr + n, nums, i + 1)
+         || tryOperators(target, curr * n, nums, i + 1)
+         || tryOperators(target, curr * Math.pow(10, `${n}`.length) + n, nums, i + 1);
    };
 
    let sum = 0;
