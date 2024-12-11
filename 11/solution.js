@@ -34,7 +34,12 @@ const runPart1 = input => {
       stonesByNumber = nextStonesByNumber;
    }
 
-   return [...stonesByNumber.values()].reduce((a, b) => a + b, 0);
+   let sum = 0;
+   for (const v of stonesByNumber.values()) {
+      sum += v;
+   }
+
+   return sum;
 };
 
 const runPart2 = input => {
@@ -71,7 +76,12 @@ const runPart2 = input => {
       stonesByNumber = nextStonesByNumber;
    }
 
-   return [...stonesByNumber.values()].reduce((a, b) => a + b, 0);
+   let sum = 0;
+   for (const v of stonesByNumber.values()) {
+      sum += v;
+   }
+
+   return sum;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
