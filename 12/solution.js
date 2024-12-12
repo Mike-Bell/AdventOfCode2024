@@ -83,6 +83,7 @@ const runPart2 = input => {
                const bl = v(r + 1, c - 1);
                const br = v(r + 1, c + 1);
 
+               /* slicker but worse performance
                const cornerCandidates = [[left, tl, top], [top, tr, right], [right, br, bot], [bot, bl, left]];
 
                for (const [c1, c2, c3] of cornerCandidates) {
@@ -91,6 +92,30 @@ const runPart2 = input => {
                   } else if (c1 === label && c2 !== label && c3 === label) {
                      sides++;
                   }
+               }
+               */
+               if (left !== label && top !== label) {
+                  sides++;
+               } else if (left === label && tl !== label && top === label) {
+                  sides++;
+               }
+
+               if (top !== label && right !== label) {
+                  sides++;
+               } else if (top === label && tr !== label && right === label) {
+                  sides++;
+               }
+
+               if (right !== label && bot !== label) {
+                  sides++;
+               } else if (right === label && br !== label && bot === label) {
+                  sides++;
+               }
+
+               if (bot !== label && left !== label) {
+                  sides++;
+               } else if (bot === label && bl !== label && left === label) {
+                  sides++;
                }
 
                for (const [dr, dc] of deltas) {
