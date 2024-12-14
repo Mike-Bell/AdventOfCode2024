@@ -38,29 +38,35 @@ const runPart1 = input => {
 const runPart2 = input => {
    const width = 101;
    const height = 103;
+   const hasSeen = new Array(width * height).map(() => false);
    for (let t = 0; t < width * height; t++) {
-      const posSet = new Set();
       let allUnique = true;
+
+      for (let i = 0; i < hasSeen.length; i++) {
+         hasSeen[i] = false;
+      }
 
       for (const row of input) {
          const finalX = ((row.p[0] + row.v[0] * t) % width + width) % width;
          const finalY = ((row.p[1] + row.v[1] * t) % height + height) % height;
          const posHash = finalY * width + finalX;
-         if (posSet.has(posHash)) {
+         if (hasSeen[posHash]) {
             allUnique = false;
             break;
          }
-         posSet.add(posHash);
+         hasSeen[posHash] = true;
       }
 
       if (allUnique) {
          const PRINT_TREE = false;
          if (PRINT_TREE) {
             const map = new Array(height).fill(0).map(() => new Array(width).fill(0).map(() => '.'));
-            for (const hash of posSet.values()) {
-               const y = Math.floor(hash / width);
-               const x = hash % width;
-               map[y][x] = 'X';
+            for (let i = 0; i < hasSeen.length; i++) {
+               if (hasSeen[i]) {
+                  const y = Math.floor(i / width);
+                  const x = i % width;
+                  map[y][x] = 'X';
+               }
             }
             console.debug(map.map(row => row.join('')).join('\r\n'));
          }
