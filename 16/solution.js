@@ -1,11 +1,7 @@
 const parseInput = input => input.split('\r\n').map(row => row.split(''));
 
-const DIRS = [
-   [-1, 0],
-   [0, 1],
-   [1, 0],
-   [0, -1]
-];
+const DR = [-1, 0, 1, 0];
+const DC = [0, 1, 0, -1];
 
 const runPart1 = input => {
    const maxR = input.length;
@@ -29,7 +25,8 @@ const runPart1 = input => {
             continue;
          }
          visited.add(stateHash);
-         const [dr, dc] = DIRS[dir];
+         const dr = DR[dir];
+         const dc = DC[dir];
          const nextR = r + dr;
          const nextC = c + dc;
          if (nextR === goalR && nextC === goalC) {
@@ -58,23 +55,24 @@ const runPart1 = input => {
 const runPart2 = input => {
    const maxR = input.length;
    const maxC = input[0].length;
-   const states = [[[maxR - 2, 1, 1, true, [(maxR - 2) * maxC + 1]]]];
+   const states = [[[maxR - 2, 1, 1, true, []]]];
    const goalR = 1;
    const goalC = maxC - 2;
 
    const visited = new Set();
 
-   let found = false;
-   let i = 0;
    const winningSet = new Set();
-   for (i = 0; i < Infinity; i++) {
+   for (let i = 0; i < Infinity; i++) {
       const statesForScore = states[i];
       if (!statesForScore) {
          continue;
       }
 
+      let found = false;
       states[i + 1000] = states[i + 1000] || [];
-      for (const [r, c, dir, canTurn, path] of statesForScore) {
+
+      for (let j = 0; j < statesForScore.length; j++) {
+         const [r, c, dir, canTurn, path] = statesForScore[j];
          if (r === goalR && c === goalC) {
             found = true;
             for (const p of path) {
@@ -86,7 +84,9 @@ const runPart2 = input => {
          if (visited.has(stateHash)) {
             continue;
          }
-         const [dr, dc] = DIRS[dir];
+         visited.add(stateHash);
+         const dr = DR[dir];
+         const dc = DC[dir];
          const nextR = r + dr;
          const nextC = c + dc;
 
@@ -99,23 +99,28 @@ const runPart2 = input => {
             continue;
          }
 
-         states[i + 1] = states[i + 1] || [];
-         states[i + 1].push([nextR, nextC, dir, true, [...path, nextR * maxC + nextC]]);
-      }
+         const nextPath = [...path, nextR * maxC + nextC];
+         const otherState = statesForScore.find((o, k) => k !== j && o[0] === r && o[1] === c && o[2] === dir);
+         if (otherState) {
+            for (const p of otherState[4]) {
+               if (!nextPath.includes(p)) {
+                  nextPath.push(p);
+               }
+            }
+         }
 
-      for (const [r, c, dir] of statesForScore) {
-         const stateHash = r * maxC * 1000 + c * 10 + dir;
-         visited.add(stateHash);
+         states[i + 1] = states[i + 1] || [];
+         states[i + 1].push([nextR, nextC, dir, true, nextPath]);
       }
 
       if (found) {
-         break;
+         return winningSet.size + 1;
       }
 
       states[i] = null;
    }
 
-   return winningSet.size;
+   return -1;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
