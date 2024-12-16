@@ -61,25 +61,17 @@ const runPart2 = input => {
 
    const visited = new Set();
 
-   const winningSet = new Set();
    for (let i = 0; i < Infinity; i++) {
       const statesForScore = states[i];
       if (!statesForScore) {
          continue;
       }
 
-      let found = false;
       states[i + 1000] = states[i + 1000] || [];
 
       for (let j = 0; j < statesForScore.length; j++) {
          const [r, c, dir, canTurn, path] = statesForScore[j];
-         if (r === goalR && c === goalC) {
-            found = true;
-            for (const p of path) {
-               winningSet.add(p);
-            }
-            continue;
-         }
+
          const stateHash = r * maxC * 1000 + c * 10 + dir;
          if (visited.has(stateHash)) {
             continue;
@@ -89,6 +81,10 @@ const runPart2 = input => {
          const dc = DC[dir];
          const nextR = r + dr;
          const nextC = c + dc;
+
+         if (nextR === goalR && nextC === goalC) {
+            return path.length + 2;
+         }
 
          if (canTurn) {
             states[i + 1000].push([r, c, (dir + 1) % 4, false, path]);
@@ -111,10 +107,6 @@ const runPart2 = input => {
 
          states[i + 1] = states[i + 1] || [];
          states[i + 1].push([nextR, nextC, dir, true, nextPath]);
-      }
-
-      if (found) {
-         return winningSet.size + 1;
       }
 
       states[i] = null;
