@@ -2,7 +2,7 @@ const parseInput = input => {
    const [map, dirs] = input.split('\r\n\r\n');
    return {
       map: map.split('\r\n').map(row => row.split('')),
-      dirs: dirs.split('\r\n').flatMap(row => row.split(''))
+      dirs: dirs.split('\r\n').join('')
    };
 };
 
