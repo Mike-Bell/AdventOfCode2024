@@ -71,8 +71,9 @@ const runPart2 = input => {
    let left = bytes;
    let right = input.length;
 
+   let mid = 0;
    while (right > left) {
-      const mid = left + Math.floor((right - left) / 2);
+      mid = left + Math.floor((right - left) / 2);
       const curBytes = input.slice(0, mid);
       for (let r = 0; r <= size; r++) {
          for (let c = 0; c <= size; c++) {
@@ -91,7 +92,7 @@ const runPart2 = input => {
       }
    }
 
-   return `${input[left - 1][0]},${input[left - 1][1]}`;
+   return `${input[mid][0]},${input[mid][1]}`;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
