@@ -16,26 +16,19 @@ const runPart1 = input => {
       map[byte[1]][byte[0]] = false;
    }
 
-   const visited = new Set();
-
    const states = [[0, 0, 0]];
+   map[0][0] = false;
    while (states.length > 0) {
       const [r, c, s] = states.pop();
-      if (r === size && c === size) {
-         return s;
-      }
-
-      const stateHash = r * (size + 1) + c;
-
-      if (visited.has(stateHash)) {
-         continue;
-      }
-      visited.add(stateHash);
 
       for (const d of deltas) {
          const nextR = r + d[0];
          const nextC = c + d[1];
          if (nextR >= 0 && nextR <= size && nextC >= 0 && nextC <= size && map[nextR][nextC]) {
+            if (nextR === size && nextC === size) {
+               return s + 1;
+            }
+            map[nextR][nextC] = false;
             states.unshift([nextR, nextC, s + 1]);
          }
       }
@@ -54,26 +47,19 @@ const runPart2 = input => {
    }
 
    const runMap = () => {
-      const visited = new Set();
-
       const states = [[0, 0]];
+      map[0][0] = false;
       while (states.length > 0) {
          const [r, c] = states.pop();
-         if (r === size && c === size) {
-            return 0;
-         }
-
-         const stateHash = r * (size + 1) + c;
-
-         if (visited.has(stateHash)) {
-            continue;
-         }
-         visited.add(stateHash);
 
          for (const d of deltas) {
             const nextR = r + d[0];
             const nextC = c + d[1];
             if (nextR >= 0 && nextR <= size && nextC >= 0 && nextC <= size && map[nextR][nextC]) {
+               if (nextR === size && nextC === size) {
+                  return 0;
+               }
+               map[nextR][nextC] = false;
                states.push([nextR, nextC]);
             }
          }
