@@ -42,9 +42,6 @@ const runPart2 = input => {
    const bytes = input.length > 100 ? 1024 : 12;
 
    const map = new Array(size + 1).fill(0).map(() => new Array(size + 1).fill(true));
-   for (const byte of input.slice(0, bytes)) {
-      map[byte[0]][byte[1]] = false;
-   }
 
    const runMap = () => {
       const states = [[0, 0]];
