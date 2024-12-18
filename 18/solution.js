@@ -53,14 +53,14 @@ const runPart2 = input => {
       map[byte[0]][byte[1]] = false;
    }
 
-   const runMap = (r0, c0) => {
+   const runMap = () => {
       const visited = new Set();
 
-      const states = [[r0, c0, []]];
+      const states = [[0, 0]];
       while (states.length > 0) {
-         const [r, c, p] = states.pop();
+         const [r, c] = states.pop();
          if (r === size && c === size) {
-            return p;
+            return 0;
          }
 
          const stateHash = r * (size + 1) + c;
@@ -70,13 +70,11 @@ const runPart2 = input => {
          }
          visited.add(stateHash);
 
-         const nextPath = [...p, stateHash];
-
          for (const d of deltas) {
             const nextR = r + d[0];
             const nextC = c + d[1];
             if (nextR >= 0 && nextR <= size && nextC >= 0 && nextC <= size && map[nextR][nextC]) {
-               states.unshift([nextR, nextC, nextPath]);
+               states.push([nextR, nextC]);
             }
          }
       }
@@ -84,21 +82,30 @@ const runPart2 = input => {
       return -1;
    };
 
-   let path = runMap(0, 0);
+   let left = bytes;
+   let right = input.length;
 
-   for (const byte of input.slice(bytes)) {
-      const stateHash = byte[0] * (size + 1) + byte[1];
-      map[byte[0]][byte[1]] = false;
-      if (path.includes(stateHash)) {
-         path = runMap(0, 0);
+   while (right > left) {
+      const mid = left + Math.floor((right - left) / 2);
+      const curBytes = input.slice(0, mid);
+      for (let r = 0; r <= size; r++) {
+         for (let c = 0; c <= size; c++) {
+            map[r][c] = true;
+         }
       }
 
-      if (path === -1) {
-         return `${byte[0]},${byte[1]}`;
+      for (const byte of curBytes) {
+         map[byte[0]][byte[1]] = false;
+      }
+
+      if (runMap() === -1) {
+         right = mid - 1;
+      } else {
+         left = mid + 1;
       }
    }
 
-   return -1;
+   return `${input[left - 1][0]},${input[left - 1][1]}`;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
