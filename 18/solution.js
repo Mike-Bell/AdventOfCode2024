@@ -66,30 +66,32 @@ const runPart2 = input => {
    };
 
    let left = bytes;
-   let right = input.length;
+   let right = input.length - 1;
 
-   let mid = 0;
+   let firstBad = -1;
    while (right > left) {
-      mid = left + Math.floor((right - left) / 2);
-      const curBytes = input.slice(0, mid);
+      const mid = left + Math.floor((right - left) / 2);
       for (let r = 0; r <= size; r++) {
          for (let c = 0; c <= size; c++) {
             map[r][c] = true;
          }
       }
 
-      for (const byte of curBytes) {
+      for (let j = 0; j <= mid; j++) {
+         const byte = input[j];
          map[byte[0]][byte[1]] = false;
       }
 
       if (runMap() === -1) {
+         firstBad = mid;
          right = mid - 1;
       } else {
+         firstBad = mid + 1;
          left = mid + 1;
       }
    }
 
-   return `${input[mid][0]},${input[mid][1]}`;
+   return `${input[firstBad][0]},${input[firstBad][1]}`;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
