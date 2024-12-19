@@ -12,16 +12,24 @@ const runPart1 = input => {
    const {towels, patterns} = input;
    towels.sort((a, b) => a.length - b.length);
 
-   const cache = new Map();
+   const towelsByChar = {};
+   for (const towel of towels) {
+      const first = towel[0];
+      towelsByChar[first] = towelsByChar[first] || [];
+      towelsByChar[first].push(towel);
+   }
+
+   const cache = {};
    const canMakePattern = pattern => {
-      const cached = cache.get(pattern);
+      const cached = cache[pattern];
       if (cached === true || cached === false) {
          return cached;
       }
 
-      for (const candidate of towels) {
+      const candidates = towelsByChar[pattern[0]];
+      for (const candidate of candidates) {
          if (candidate === pattern) {
-            cache.set(pattern, true);
+            cache[pattern] = true;
             return true;
          }
 
@@ -36,7 +44,7 @@ const runPart1 = input => {
             }
          }
       }
-      cache.set(pattern, false);
+      cache[pattern] = true;
       return false;
    };
 
@@ -46,16 +54,23 @@ const runPart1 = input => {
 const runPart2 = input => {
    const {towels, patterns} = input;
    towels.sort((a, b) => a.length - b.length);
+   const towelsByChar = {};
+   for (const towel of towels) {
+      const first = towel[0];
+      towelsByChar[first] = towelsByChar[first] || [];
+      towelsByChar[first].push(towel);
+   }
 
-   const cache = new Map();
+   const cache = {};
    const getWays = pattern => {
-      const cached = cache.get(pattern);
+      const cached = cache[pattern];
       if (cached || cached === 0) {
          return cached;
       }
 
+      const candidates = towelsByChar[pattern[0]];
       let hits = 0;
-      for (const candidate of towels) {
+      for (const candidate of candidates) {
          if (candidate === pattern) {
             hits++;
             break;
@@ -69,7 +84,7 @@ const runPart2 = input => {
             hits += getWays(pattern.slice(candidate.length));
          }
       }
-      cache.set(pattern, hits);
+      cache[pattern] = hits;
       return hits;
    };
 
