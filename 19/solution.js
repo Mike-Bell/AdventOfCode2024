@@ -25,14 +25,18 @@ const runPart1 = input => {
             return true;
          }
 
+         if (candidate.length > pattern.length) {
+            break;
+         }
+
          if (candidate.length < pattern.length && pattern.startsWith(candidate)) {
             const canMake = canMakePattern(pattern.slice(candidate.length));
-            cache.set(pattern, canMake);
             if (canMake) {
                return true;
             }
          }
       }
+      cache.set(pattern, false);
       return false;
    };
 
@@ -41,6 +45,7 @@ const runPart1 = input => {
 
 const runPart2 = input => {
    const {towels, patterns} = input;
+   towels.sort((a, b) => a.length - b.length);
 
    const cache = new Map();
    const getWays = pattern => {
@@ -53,12 +58,15 @@ const runPart2 = input => {
       for (const candidate of towels) {
          if (candidate === pattern) {
             hits++;
-            continue;
+            break;
+         }
+
+         if (candidate.length > pattern.length) {
+            break;
          }
 
          if (candidate.length < pattern.length && pattern.startsWith(candidate)) {
-            const hitsForTowel = getWays(pattern.slice(candidate.length));
-            hits += hitsForTowel;
+            hits += getWays(pattern.slice(candidate.length));
          }
       }
       cache.set(pattern, hits);
