@@ -9,97 +9,63 @@ const parseInput = input => {
 };
 
 const runPart1 = input => {
-   const inputTowels = input.towels.sort((a, b) => a.length - b.length);
-   const towelsToRemove = [];
-   for (let i = 0; i < inputTowels.length; i++) {
-      const towel = inputTowels[i];
-      if (towel.length > 0) {
-         const candidates = inputTowels.slice(0, i);
-         const states = [0];
-         const visited = new Array(towel.length).fill(false);
-         let found = false;
-         while (states.length > 0 && !found) {
-            const cursor = states.pop();
-            if (cursor === towel.length) {
-               found = true;
-               break;
-            }
+   const {towels, patterns} = input;
+   towels.sort((a, b) => a.length - b.length);
 
-            for (const t of candidates) {
-               if (!visited[t.length + cursor] && towel.slice(cursor, t.length + cursor) === t) {
-                  visited[t.length + cursor] = true;
-                  states.push(cursor + t.length);
-               }
-            }
-         }
-
-         if (found) {
-            towelsToRemove.push(i);
-         }
+   const cache = new Map();
+   const canMakePattern = pattern => {
+      const cached = cache.get(pattern);
+      if (cached === true || cached === false) {
+         return cached;
       }
-   }
 
-   const towels = [];
-   for (let i = 0; i < inputTowels.length; i++) {
-      if (!towelsToRemove.includes(i)) {
-         towels.push(inputTowels[i]);
-      }
-   }
-
-   let matches = 0;
-   for (const pattern of input.patterns) {
-      const states = [0];
-      let found = false;
-      const visited = new Array(pattern.length).fill(false);
-      while (states.length > 0 && !found) {
-         const cursor = states.pop();
-         if (cursor === pattern.length) {
-            found = true;
-            break;
+      for (const candidate of towels) {
+         if (candidate === pattern) {
+            cache.set(pattern, true);
+            return true;
          }
 
-         for (const t of towels) {
-            if (!visited[t.length + cursor] && pattern.slice(cursor, t.length + cursor) === t) {
-               visited[t.length + cursor] = true;
-               states.push(cursor + t.length);
+         if (candidate.length < pattern.length && pattern.startsWith(candidate)) {
+            const canMake = canMakePattern(pattern.slice(candidate.length));
+            cache.set(pattern, canMake);
+            if (canMake) {
+               return true;
             }
          }
       }
+      return false;
+   };
 
-      if (found) {
-         matches++;
-      }
-   }
-
-   return matches;
+   return patterns.filter(canMakePattern).length;
 };
 
 const runPart2 = input => {
-   input.towels.sort((a, b) => a.length - b.length);
+   const {towels, patterns} = input;
 
-   let matches = 0;
-   for (const pattern of input.patterns) {
-      console.debug(pattern);
-      const states = [0];
-      let found = 0;
-      while (states.length > 0) {
-         const cursor = states.pop();
-         if (cursor === pattern.length) {
-            found++;
+   const cache = new Map();
+   const getWays = pattern => {
+      const cached = cache.get(pattern);
+      if (cached || cached === 0) {
+         return cached;
+      }
+
+      let hits = 0;
+      for (const candidate of towels) {
+         if (candidate === pattern) {
+            hits++;
             continue;
          }
 
-         for (const t of input.towels) {
-            if (pattern.slice(cursor, t.length + cursor) === t) {
-               states.push(cursor + t.length);
-            }
+         if (candidate.length < pattern.length && pattern.startsWith(candidate)) {
+            const hitsForTowel = getWays(pattern.slice(candidate.length));
+            hits += hitsForTowel;
          }
       }
+      cache.set(pattern, hits);
+      return hits;
+   };
 
-      matches += found;
-   }
-
-   return matches;
+   return patterns.reduce((acc, cur) => acc + getWays(cur), 0);
 };
 
 module.exports = {parseInput, runPart1, runPart2};
