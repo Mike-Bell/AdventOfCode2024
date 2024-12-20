@@ -46,8 +46,7 @@ const runPart1 = input => {
    let c = startC;
    let steps = 0;
 
-   while (r !== goalR || c !== goalC) {
-      stepMap[r][c] = steps;
+   const findCheats = () => {
       for (let dr = -2; dr <= 2; dr++) {
          for (let dc = -2; dc <= 2; dc++) {
             const amount = (Math.abs(dr) + Math.abs(dc));
@@ -59,6 +58,12 @@ const runPart1 = input => {
             }
          }
       }
+   };
+
+   while (r !== goalR || c !== goalC) {
+      stepMap[r][c] = steps;
+      findCheats();
+
       for (const d of DIR) {
          const nextR = r + d[0];
          const nextC = c + d[1];
@@ -73,17 +78,7 @@ const runPart1 = input => {
       steps++;
    }
 
-   for (let dr = -2; dr <= 2; dr++) {
-      for (let dc = -2; dc <= 2; dc++) {
-         const amount = (Math.abs(dr) + Math.abs(dc));
-         if (amount === 2) {
-            const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
-            if (cheatAmount >= 100) {
-               cheats++;
-            }
-         }
-      }
-   }
+   findCheats();
 
    return cheats;
 };
@@ -127,8 +122,7 @@ const runPart2 = input => {
    let c = startC;
    let steps = 0;
 
-   while (r !== goalR || c !== goalC) {
-      stepMap[r][c] = steps;
+   const findCheats = () => {
       for (let dr = -20; dr <= 20; dr++) {
          for (let dc = -20; dc <= 20; dc++) {
             const amount = (Math.abs(dr) + Math.abs(dc));
@@ -140,6 +134,12 @@ const runPart2 = input => {
             }
          }
       }
+   };
+
+   while (r !== goalR || c !== goalC) {
+      stepMap[r][c] = steps;
+      findCheats();
+
       for (const d of DIR) {
          const nextR = r + d[0];
          const nextC = c + d[1];
@@ -154,17 +154,7 @@ const runPart2 = input => {
       steps++;
    }
 
-   for (let dr = -20; dr <= 20; dr++) {
-      for (let dc = -20; dc <= 20; dc++) {
-         const amount = (Math.abs(dr) + Math.abs(dc));
-         if (amount >= 2 && amount <= 20) {
-            const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
-            if (cheatAmount >= 100) {
-               cheats++;
-            }
-         }
-      }
-   }
+   findCheats();
 
    return cheats;
 };
