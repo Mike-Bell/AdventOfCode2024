@@ -39,15 +39,6 @@ const runPart1 = input => {
       return stepMap[r][c];
    };
 
-   const cheatDirs = [];
-   for (let r = -2; r <= 2; r++) {
-      for (let c = -2; c <= 2; c++) {
-         if ((r !== 0 || c !== 0) && (Math.abs(r) + Math.abs(c) <= 2)) {
-            cheatDirs.push([r, c]);
-         }
-      }
-   }
-
    let cheats = 0;
    let lastR = -1;
    let lastC = -1;
@@ -57,10 +48,15 @@ const runPart1 = input => {
 
    while (r !== goalR || c !== goalC) {
       stepMap[r][c] = steps;
-      for (const d of cheatDirs) {
-         const cheatAmount = steps - getStepsToPos(r + d[0], c + d[1]) - 2;
-         if (cheatAmount >= 100) {
-            cheats++;
+      for (let dr = -2; dr <= 2; dr++) {
+         for (let dc = -2; dc <= 2; dc++) {
+            const amount = (Math.abs(dr) + Math.abs(dc));
+            if (amount === 2) {
+               const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
+               if (cheatAmount >= 100) {
+                  cheats++;
+               }
+            }
          }
       }
       for (const d of DIR) {
@@ -77,10 +73,15 @@ const runPart1 = input => {
       steps++;
    }
 
-   for (const d of cheatDirs) {
-      const cheatAmount = steps - getStepsToPos(r + d[0], c + d[1]) - 2;
-      if (cheatAmount >= 100) {
-         cheats++;
+   for (let dr = -2; dr <= 2; dr++) {
+      for (let dc = -2; dc <= 2; dc++) {
+         const amount = (Math.abs(dr) + Math.abs(dc));
+         if (amount === 2) {
+            const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
+            if (cheatAmount >= 100) {
+               cheats++;
+            }
+         }
       }
    }
 
@@ -119,15 +120,6 @@ const runPart2 = input => {
       return stepMap[r][c];
    };
 
-   const cheatDirs = [];
-   for (let r = -20; r <= 20; r++) {
-      for (let c = -20; c <= 20; c++) {
-         if ((r !== 0 || c !== 0) && (Math.abs(r) + Math.abs(c) <= 20)) {
-            cheatDirs.push([r, c]);
-         }
-      }
-   }
-
    let cheats = 0;
    let lastR = -1;
    let lastC = -1;
@@ -137,10 +129,15 @@ const runPart2 = input => {
 
    while (r !== goalR || c !== goalC) {
       stepMap[r][c] = steps;
-      for (const [dr, dc] of cheatDirs) {
-         const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - Math.abs(dr) - Math.abs(dc);
-         if (cheatAmount >= 100) {
-            cheats++;
+      for (let dr = -20; dr <= 20; dr++) {
+         for (let dc = -20; dc <= 20; dc++) {
+            const amount = (Math.abs(dr) + Math.abs(dc));
+            if (amount >= 2 && amount <= 20) {
+               const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
+               if (cheatAmount >= 100) {
+                  cheats++;
+               }
+            }
          }
       }
       for (const d of DIR) {
@@ -157,10 +154,15 @@ const runPart2 = input => {
       steps++;
    }
 
-   for (const [dr, dc] of cheatDirs) {
-      const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - Math.abs(dr) - Math.abs(dc);
-      if (cheatAmount >= 100) {
-         cheats++;
+   for (let dr = -20; dr <= 20; dr++) {
+      for (let dc = -20; dc <= 20; dc++) {
+         const amount = (Math.abs(dr) + Math.abs(dc));
+         if (amount >= 2 && amount <= 20) {
+            const cheatAmount = steps - getStepsToPos(r + dr, c + dc) - amount;
+            if (cheatAmount >= 100) {
+               cheats++;
+            }
+         }
       }
    }
 
