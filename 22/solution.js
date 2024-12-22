@@ -12,6 +12,8 @@ const runPart1 = input => input.reduce((acc, curr) => {
 }, 0);
 
 const runPart2 = input => {
+   const sqNineteen = 19 * 19;
+   const cubeNineteen = 19 * 19 * 19;
    const BANANAS = {};
    for (const val of input) {
       let d0 = 0;
@@ -33,7 +35,7 @@ const runPart2 = input => {
          lastSecret = secret;
 
          if (i > 2) {
-            const key = d0 * 1000000 + d1 * 10000 + d2 * 100 + d3;
+            const key = d0 * cubeNineteen + d1 * sqNineteen + d2 * 19 + d3;
             if (!seen.has(key)) {
                seen.add(key);
                BANANAS[key] = (BANANAS[key] || 0) + (secret % 10);
