@@ -14,19 +14,20 @@ const runPart1 = input => input.reduce((acc, curr) => {
 const runPart2 = input => {
    const sqNineteen = 19 * 19;
    const cubeNineteen = 19 * 19 * 19;
-   const BANANAS = new Map();
+   const BANANAS = new Int16Array(19 * 19 * 19 * 19).fill(0);
+   const seen = new Uint8Array(19 * 19 * 19 * 19);
    for (const val of input) {
       let d0 = 0;
       let d1 = 0;
       let d2 = 0;
       let d3 = 0;
       let lastSecret = val;
-      const seen = new Set();
+      seen.fill(0);
       for (let i = 0; i < 2000; i++) {
          let secret = lastSecret;
-         secret = (((secret * 64) ^ secret) >>> 0) % 16777216;
-         secret = ((Math.floor(secret / 32) ^ secret) >>> 0) % 16777216;
-         secret = (((secret * 2048) ^ secret) >>> 0) % 16777216;
+         secret = (secret ^ (secret << 6)) & 0xFFFFFF;
+         secret = (secret ^ (secret >> 5));
+         secret = (secret ^ (secret << 11)) & 0xFFFFFF;
 
          d0 = d1;
          d1 = d2;
@@ -35,16 +36,23 @@ const runPart2 = input => {
          lastSecret = secret;
 
          if (i > 2) {
-            const key = d0 * cubeNineteen + d1 * sqNineteen + d2 * 19 + d3;
-            if (!seen.has(key)) {
-               seen.add(key);
-               BANANAS.set(key, (BANANAS.get(key) || 0) + (secret % 10));
+            const key = (d0 + 9) * cubeNineteen + (d1 + 9) * sqNineteen + (d2 + 9) * 19 + d3 + 9;
+            if (!seen[key]) {
+               seen[key] = 1;
+               BANANAS[key] += secret % 10;
             }
          }
       }
    }
 
-   return Math.max(...BANANAS.values());
+   let m = 0;
+   for (const b of BANANAS) {
+      if (b > m) {
+         m = b;
+      }
+   }
+
+   return m;
 };
 
 module.exports = {parseInput, runPart1, runPart2};
