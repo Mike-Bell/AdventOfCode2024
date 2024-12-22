@@ -14,7 +14,7 @@ const runPart1 = input => input.reduce((acc, curr) => {
 const runPart2 = input => {
    const sqNineteen = 19 * 19;
    const cubeNineteen = 19 * 19 * 19;
-   const BANANAS = {};
+   const BANANAS = new Map();
    for (const val of input) {
       let d0 = 0;
       let d1 = 0;
@@ -38,13 +38,13 @@ const runPart2 = input => {
             const key = d0 * cubeNineteen + d1 * sqNineteen + d2 * 19 + d3;
             if (!seen.has(key)) {
                seen.add(key);
-               BANANAS[key] = (BANANAS[key] || 0) + (secret % 10);
+               BANANAS.set(key, (BANANAS.get(key) || 0) + (secret % 10));
             }
          }
       }
    }
 
-   return Math.max(...Object.values(BANANAS));
+   return Math.max(...BANANAS.values());
 };
 
 module.exports = {parseInput, runPart1, runPart2};
