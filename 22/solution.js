@@ -2,13 +2,13 @@
 /* eslint-disable no-mixed-operators */
 const parseInput = input => input.split('\r\n').map(Number);
 
-const runPart1 = input => input.reduce((acc, curr) => {
+const runPart1 = input => input.reduce((acc, secret) => {
    for (let i = 0; i < 2000; i++) {
-      curr = (((curr * 64) ^ curr) >>> 0) % 16777216;
-      curr = ((Math.floor(curr / 32) ^ curr) >>> 0) % 16777216;
-      curr = (((curr * 2048) ^ curr) >>> 0) % 16777216;
+      secret = (((secret * 64) ^ secret) >>> 0) % 16777216;
+      secret = ((Math.floor(secret / 32) ^ secret) >>> 0) % 16777216;
+      secret = (((secret * 2048) ^ secret) >>> 0) % 16777216;
    }
-   return acc + curr;
+   return acc + secret;
 }, 0);
 
 const runPart2 = input => {
@@ -25,9 +25,9 @@ const runPart2 = input => {
       seen.fill(0);
       for (let i = 0; i < 2000; i++) {
          let secret = lastSecret;
-         secret = (secret ^ (secret << 6)) & 0xFFFFFF;
-         secret = (secret ^ (secret >> 5));
-         secret = (secret ^ (secret << 11)) & 0xFFFFFF;
+         secret = (((secret * 64) ^ secret) >>> 0) % 16777216;
+         secret = ((Math.floor(secret / 32) ^ secret) >>> 0) % 16777216;
+         secret = (((secret * 2048) ^ secret) >>> 0) % 16777216;
 
          d0 = d1;
          d1 = d2;
