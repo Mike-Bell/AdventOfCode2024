@@ -7,8 +7,8 @@ const runPart1 = input => {
       const isLock = section[0][0] === '#';
       const geo = [];
       for (let c = 0; c <= 4; c++) {
-         let n = -1;
-         for (let r = 0; r <= 6; r++) {
+         let n = 0;
+         for (let r = 1; r <= 5; r++) {
             if (section[r][c] === '#') {
                n++;
             }
