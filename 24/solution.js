@@ -127,7 +127,6 @@ const runPart2 = () =>
    require('fs').writeFileSync('C://projects/git-personal/graph.txt', str);
 */
 
-   ['z10', 'z15', 'tvp', 'mmf', 'vdk', 'dpg', 'kmb', 'z25'].sort().join(',')
-;
+   ['z10', 'z15', 'tvp', 'mmf', 'vdk', 'dpg', 'kmb', 'z25'].sort().join(',');
 
 module.exports = {parseInput, runPart1, runPart2};

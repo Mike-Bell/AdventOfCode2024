@@ -2,9 +2,7 @@ const parseInput = input => input;
 
 const runPart1 = input => {
    const result = [...input.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g)];
-   return result.reduce((acc, curr) => {
-      return acc + Number(curr[1]) * Number(curr[2]);
-   }, 0);
+   return result.reduce((acc, curr) => acc + Number(curr[1]) * Number(curr[2]), 0);
 };
 
 const runPart2 = input => {

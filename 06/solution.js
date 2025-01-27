@@ -37,7 +37,6 @@ const runPart1 = input => {
       }
    })();
 
-   // eslint-disable-next-line no-constant-condition
    while (true) {
       const nextR = r + dirs[dir][0];
       const nextC = c + dirs[dir][1];
@@ -97,7 +96,7 @@ const runPart2 = input => {
    const initials = [];
    const teleports = new Map();
    let lastKey = '';
-   // eslint-disable-next-line no-constant-condition, no-labels
+   // eslint-disable-next-line no-labels
    outer: while (true) {
       const nextR = r + dirs[dir][0];
       const nextC = c + dirs[dir][1];
@@ -139,7 +138,7 @@ const runPart2 = input => {
       const visited = new Set();
 
       input[rt][ct] = '#';
-      // eslint-disable-next-line no-constant-condition, no-labels
+      // eslint-disable-next-line no-labels
       outer2: while (true) {
          const nextR = r + dirs[dir][0];
          const nextC = c + dirs[dir][1];

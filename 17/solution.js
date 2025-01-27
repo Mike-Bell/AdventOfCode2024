@@ -22,7 +22,6 @@ const runPart1 = input => {
       return registers[n - 4];
    };
 
-   // eslint-disable-next-line no-constant-condition
    while (i < program.length) {
       switch (program[i]) {
          case 0: {
@@ -89,7 +88,7 @@ const runPart2 = input => {
    const runProgram = () => {
       let i = 0;
       const ans = [];
-      // eslint-disable-next-line no-constant-condition
+
       while (i < program.length) {
          switch (program[i]) {
             case 0: {

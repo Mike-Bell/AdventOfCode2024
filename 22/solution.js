@@ -1,5 +1,4 @@
 /* eslint-disable no-bitwise */
-/* eslint-disable no-mixed-operators */
 const parseInput = input => input.split('\r\n').map(Number);
 
 const runPart1 = input => input.reduce((acc, secret) => {
